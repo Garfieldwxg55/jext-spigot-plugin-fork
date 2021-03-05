@@ -20,6 +20,8 @@ public class CommandsRegistrant {
     new ExecutorPlayMusic().registerTo(plugin);
     new ExecutorPlayAt().registerTo(plugin);
     new ExecutorStopMusic().registerTo(plugin);
+
+    new ExecutorDiscReload().registerTo(plugin);
   }
 
 }

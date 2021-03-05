@@ -7,7 +7,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.BlockPosition;
-
 import me.tajam.jext.DiscContainer;
 import me.tajam.jext.Log;
 import me.tajam.jext.SpigotVersion;
@@ -16,7 +15,6 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
@@ -27,6 +25,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.awt.*;
 
 class RecordPacketListener extends PacketAdapter {
 
@@ -46,7 +46,7 @@ class RecordPacketListener extends PacketAdapter {
     final Block block = world.getBlockAt(location);
     final BlockState blockState = block.getState();
     final Integer data = packet.getIntegers().read(1);
-    
+
     if (blockState instanceof Jukebox && !data.equals(0)) {
       final Jukebox jukebox = (Jukebox) blockState;
       final ItemStack disc = jukebox.getRecord();
@@ -60,14 +60,44 @@ class RecordPacketListener extends PacketAdapter {
         @Override
         public void run() {
           player.stopSound(DiscContainer.SOUND_MAP.get(container.getMaterial()), SoundCategory.RECORDS);
-          if (SpigotVersion.isVersion1_15() || SpigotVersion.isVersion1_16()) {
-            ActionBarDisplay_LT15(player, container);
+          if(SpigotVersion.isVersion1_16()) {
+              ActionBarDisplay_LT16(player, container);
+          } else if (SpigotVersion.isVersion1_15()) {
+              ActionBarDisplay_LT15(player, container);
           } else {
-            ActionBarDisplay_ST14(player, container);
+              ActionBarDisplay_ST14(player, container);
           }
         }
       }.runTaskLater(plugin, 4);
     }
+  }
+
+  public void ActionBarDisplay_LT16(Player player, DiscContainer container) {
+    new BukkitRunnable() {
+      int tick = 0;
+      //float partialTicks = System.currentTimeMillis() % 200;
+      @Override
+      public void run() {
+        int k1 = Color.HSBtoRGB(tick / 50.0F, 0.7F, 0.6F) & 16777215;
+        ChatColor color = ChatColor.of(new Color(k1));
+
+        final BaseComponent[] baseComponents = new ComponentBuilder()
+        .append("Now playing: ").color(color)
+        .append(container.getAuthor()).color(color)
+        .append(" - ").color(color)
+        .append(container.toString()).color(color)
+        .create();
+
+
+        if (tick == 60) {
+            cancel();
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR);
+        } else {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, baseComponents);
+        }
+        tick++;
+      }
+    }.runTaskTimer(plugin, 0, 1);
   }
 
   public void ActionBarDisplay_LT15 (Player player, DiscContainer container) {

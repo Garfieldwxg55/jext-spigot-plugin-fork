@@ -1,9 +1,12 @@
 main: me.tajam.jext.Jext
-name: JukeboxExtended
+name: JukeboxExtendedFork
 author: Tajam
 version: 1.2.0
 api-version: 1.14
 depend: [ProtocolLib]
+
+authors:
+  - VendoAU
 
 commands:
   disc:
@@ -26,6 +29,10 @@ commands:
     description: Stop specified custom music or all custom music for selected player(s). 
     permission: jext.stopmusic
     usage: /stopmusic [selector] <name>
+  discreload:
+    description: Reload nbt for the specified custom music disc.
+    permission: jext.disc.reload
+    usage: /discreload
 
 permissions:
   jext.*:

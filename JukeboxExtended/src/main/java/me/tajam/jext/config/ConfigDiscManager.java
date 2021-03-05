@@ -1,12 +1,12 @@
 package me.tajam.jext.config;
 
-import java.util.HashMap;
-import java.util.Set;
-
 import me.tajam.jext.DiscContainer;
 import me.tajam.jext.Log;
-
 import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class ConfigDiscManager {
 
@@ -40,6 +40,16 @@ public class ConfigDiscManager {
     ConfigDiscData discData = discMap.get(namespace);
     if (discData == null) return null;
     return new DiscContainer(discData);
+  }
+
+  public String getNamespaceFromModelData(int modelData) {
+      for (Map.Entry<String, ConfigDiscData> entry : discMap.entrySet()) {
+          String s = entry.getKey();
+          ConfigDiscData configDiscData = entry.getValue();
+          if (configDiscData.getIntegerData(ConfigDiscData.Path.MODEL_DATA) == modelData)
+              return s;
+      }
+      return null;
   }
 
   public boolean haveDisc(String namespace) {

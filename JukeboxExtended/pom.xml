@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>me.tajam.jext</groupId>
-  <artifactId>JukeboxExtended</artifactId>
+  <artifactId>JukeboxExtendedFork</artifactId>
   <version>1.2.1</version>
   <packaging>jar</packaging>
 
